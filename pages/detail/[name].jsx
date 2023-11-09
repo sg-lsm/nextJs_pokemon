@@ -17,6 +17,8 @@ const pokeDetail = ({ pokeNum, name }) => {
 	pokeInfo.push(pokeNum);
 	let [_pokeInfo] = pokeInfo;
 
+
+
 	/* 전면 후면 이미지  */
 	// let pokeImg_front = _pokeInfo.sprites.front_default;
 	let pokeImg_front = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${name}.png`;
@@ -40,7 +42,7 @@ const pokeDetail = ({ pokeNum, name }) => {
 	const commaNum = target => {
 		let result;
 		target = target.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-		
+
 		result = target;
 		return result;
 	};
