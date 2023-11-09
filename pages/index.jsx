@@ -2,6 +2,8 @@ import fetch from 'isomorphic-unfetch';
 import safeJsonStringfy from 'safe-json-stringify';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import css from 'styled-jsx/css';
 
 const index = ({ pokeApi }) => {
 	const api = pokeApi;
@@ -9,7 +11,7 @@ const index = ({ pokeApi }) => {
 };
 
 const app = ({ pokeApi }) => {
-    const [pokeNum, setPokeNum] = useState();
+	const [pokeNum, setPokeNum] = useState();
 	const { results } = pokeApi;
 	let arrApi = [];
 
@@ -17,8 +19,8 @@ const app = ({ pokeApi }) => {
 		for (let i = 0; i < results.length; i++) {
 			arrApi.push({
 				name: results[i].name,
-                url: results[i].url,
-                num: i+1
+				url: results[i].url,
+				num: i + 1,
 			});
 		}
 	}
@@ -28,30 +30,61 @@ const app = ({ pokeApi }) => {
 
 	// url = https://pokeapi.co/api/v2/pokemon/${num}
 
-    return (
-        <>
-            <label>
-                search to pokemon no.
-                <input value={pokeNum} onChange={e => setPokeNum(e.target.value)}/>
-            </label>
-            <p>{pokeNum}</p>
-            <Link id="search" href={`./detail/${pokeNum}`}>
-                검색하기
+	const renderApi = arrApi.map(d => {
+		return (
+			<>
+				<div className="poke_container">
+					<Image
+						width={80}
+						height={100}
+						src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${d.num}.png`}
+					/>
+					<div className="poke_desc">
+						<div className="poke_name" key={d.num}>
+							{d.name}
+						</div>
+						{/* <Link href={`https://pokeapi.co/api/v2/pokemon/${d.num}`}>{d.url }</Link> */}
+						<Link className="poke_detail" href={`/detail/${d.num}`}>
+							{"자세히보기"}
+						</Link>
+					</div>
+				</div>
+				<style jsx>{style}</style>
+			</>
+		);
+    });
+    
+
+
+	return (
+		<>
+			<label>
+				search to pokemon no.
+				<input value={pokeNum} onChange={e => setPokeNum(e.target.value)} />
+			</label>
+			{/* <p>{pokeNum}</p> */}
+			<Link id="searchButton" href={`./detail/${pokeNum}`}>
+				검색하기
             </Link>
-			<div>
-				{arrApi.map(d => {
-					return (
-						<>
-                            <div key={d.num}>{d.name}</div>
-                            {/* <Link href={`https://pokeapi.co/api/v2/pokemon/${d.num}`}>{d.url }</Link> */}
-                            <Link href={`/detail/${d.num}`}>{d.url}</Link>
-						</>
-					);
-				})}
-			</div>
+            <div></div>
+            <div>{ renderApi }</div>
 		</>
 	);
 };
+
+const style = css`
+	#searchButton {
+		border: 1px solid black;
+	}
+	.poke_container {
+		display: flex;
+	}
+	.poke_desc {
+		align-items: center;
+		justify-content: center;
+		display: grid;
+	}
+`;
 
 export const getServerSideProps = async () => {
 	try {
